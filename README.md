@@ -1,6 +1,6 @@
 # ESP8266-Meteo-Station
 
-Personal weather station on ESP8266.
+Personal weather station on ESP8266 v07_02_2020.
 
 Fix some bugs:
 1. Fix display on the indicator of negative temperatures
