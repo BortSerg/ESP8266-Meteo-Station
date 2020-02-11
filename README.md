@@ -1,5 +1,9 @@
 # ESP8266-Meteo-Station
 
+Personal weather station on ESP8266 v11_02_2020.
+1. Added the ability to update firmware via the web interface of the weather station. 
+   You must go to the address http: // {IP Address} / update and specify *.bin firmware file
+
 Personal weather station on ESP8266 v07_02_2020.
 
 Fix some bugs:
