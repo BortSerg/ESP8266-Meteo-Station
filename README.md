@@ -1,6 +1,6 @@
 # ESP8266-Meteo-Station
 v14_07_2022.
-1. Add auto load default settings in first start meteo stantion after firmware download.
+1. Add auto load default settings in first start meteo station after firmware download.
 2. Set DS18B20 outdoor sensor; BME280 room sensor.
 3. Fix bug in 7-segment display light.
  
