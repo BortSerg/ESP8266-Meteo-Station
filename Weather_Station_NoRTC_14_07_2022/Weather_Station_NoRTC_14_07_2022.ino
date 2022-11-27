@@ -41,12 +41,15 @@ BME280I2C bme(settings);
 #define CLK D6
 #define DIO D5
 
+bool bme_find = false;
+bool ds18b20_find = false;
+
 //Создаём объект класса TM1637, в качестве параметров передаём номера пинов подключения
 TM1637 tm1637(CLK, DIO);
 bool changeClock = false;
 bool notChangeClock = false;
 
-int NumberOfDevices; //сколько датчиков DS18B20 в системе.
+byte NumberOfDevices; //сколько датчиков DS18B20 в системе.
 
 // Переменные для часов
 // uint32 Time;                              //время в UNIX формате
@@ -67,6 +70,7 @@ unsigned long previousMillis_TM1637 = 0;
 unsigned long previousMillis_NM = 0;
 unsigned long previousMillis_TL = 0;
 unsigned long sync_previousMillis = 0;
+unsigned long currentMillis = 0;
 unsigned long interval_TM1637 = 10000;  //интервал через который происходит смена значений на индикаторе
 unsigned long interval_sync = 43200000; //интервал синхронизации часов
 byte count = 0;                         //флаг смены значений на индикаторе
@@ -181,59 +185,66 @@ void loop()
   ArduinoOTA.handle();
   delay(100);
 
-  unsigned long currentMillis = millis();
-
-  byte clock_view_count = 0;
-  if ((currentMillis - previousMillis_TM1637 > interval_TM1637) & count == 0) //вывод часов
-  {
-    previousMillis_TM1637 = currentMillis;
-    while (clock_view_count < 11)
+  //unsigned long currentMillis = millis();
+  //byte clock_view_count = 0;
+  //count = 0;
+  currentMillis = millis();
+  if (currentMillis - previousMillis_TM1637 > interval_TM1637)
     {
-      viewTime();
-      delay(1000);
-      clock_view_count++;
+      Serial.println(count);
+      previousMillis_TM1637 = currentMillis;
+      count++;
+      if (count > 4 ) count = 0;
+      
     }
-    clock_view_count = 0;
-    count++;
-  }
+/*
+  switch (count)
+  {   
+    case 0:                                           //вывод часов
+      {
+        previousMillis_TM1637 = currentMillis;
+        while (clock_view_count < 11)
+          {
+            viewTime();
+            delay(1000);
+            clock_view_count++;
+          }
+      }
 
-  if ((currentMillis - previousMillis_TM1637 > interval_TM1637) & count == 1) //вывод температуры в помещении
-  {
-    tm1637.point(false);
-    previousMillis_TM1637 = currentMillis;
-    getTM1637TemperatureRoom();
-    count++;
-  }
+    case 1:                                                   //вывод температыру на улице
+      {
+        tm1637.point(false);
+        if (ds18b20_find) getTM1637TemperatureOut();
+        else count++;
+      }
 
-  if ((currentMillis - previousMillis_TM1637 > interval_TM1637) & count == 2) //вывод температуры на улице
-  {
-    previousMillis_TM1637 = currentMillis;
-    getTM1637TemperatureOut();
-    count++;
-  }
+    case 2:                                                   //вывод температурыd в комнате
+      {
+        if (bme_find) getTM1637TemperatureRoom();
+        else count++;
+      }
 
-  if ((currentMillis - previousMillis_TM1637 > interval_TM1637) & count == 3) //вывод атмосферного давления
-  {
-    previousMillis_TM1637 = currentMillis;
-    getTM1637Pressure();
-    count++;
-  }
+    case 3:                                                   //вывод атмосферного давлния
+      {
+        if (bme_find) getTM1637Pressure();
+        else count++;
+      }
 
-  if ((currentMillis - previousMillis_TM1637 > interval_TM1637) & count == 4) //вывод влажности воздуха
-  {
-    previousMillis_TM1637 = currentMillis;
-    getTM1637Humidity();
-    count = 0;
-  }
-
-  if ((currentMillis - sync_previousMillis > interval_sync)) //тайминг синхронизации часов с сервером
+    case 4:                                                   //вывод влажности в комнате
+      {
+        if (bme_find) getTM1637Humidity();
+        else count ++;
+      }
+   }
+  /*    
+  if ((currentMillis - sync_previousMillis > interval_sync))  //тайминг синхронизации часов с сервером
   {
     sync_previousMillis = currentMillis;
     if (Config.SYNC_CLOCK == true)
       SyncRealTimeClock();
   }
 
-  if ((currentMillis - sync_previousMillis > interval_NM)) //тайминг синхронизации часов с сервером
+  if ((currentMillis - sync_previousMillis > interval_NM))    //тайминг синхронизации часов с сервером
   {
     sync_previousMillis = currentMillis;
     if (Config.SEND_NM == true)

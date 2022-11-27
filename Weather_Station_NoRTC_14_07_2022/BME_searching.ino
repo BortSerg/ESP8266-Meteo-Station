@@ -8,22 +8,24 @@ void BME(){
     delay(1000);
     count ++;
   }
-
-  // bme.chipID(); // Deprecated. See chipModel().
-  switch (bme.chipModel())
+  
+  if (bme.begin())
   {
-    case BME280::ChipModel_BME280:
-      Serial.println("Found BME280 sensor! Success.");
-      break;
-    case BME280::ChipModel_BMP280:
-      Serial.println("Found BMP280 sensor! No Humidity available.");
-      break;
-    default:
-      Serial.println("Found UNKNOWN sensor! Error!");
-  }
-
-  // Change some settings before using.
-  settings.tempOSR = BME280::OSR_X4;
-
-  bme.setSettings(settings);
+    bme_find = true;
+    // bme.chipID(); // Deprecated. See chipModel().
+    switch (bme.chipModel())
+      {
+        case BME280::ChipModel_BME280:
+          Serial.println("Found BME280 sensor! Success.");
+          break;
+        case BME280::ChipModel_BMP280:
+          Serial.println("Found BMP280 sensor! No Humidity available.");
+          break;
+        default:
+          Serial.println("Found UNKNOWN sensor! Error!");
+      }
+   // Change some settings before using.
+    settings.tempOSR = BME280::OSR_X4;
+    bme.setSettings(settings);
+ }
 }

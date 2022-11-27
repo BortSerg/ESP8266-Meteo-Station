@@ -1,13 +1,14 @@
 void Dalas18B20(){
-   DS18B20.begin();                                  //Запуск DS18B20
+  DS18B20.begin();                                  //Запуск DS18B20
   DeviceAddress tempDeviceAddress;
   NumberOfDevices = DS18B20.getDeviceCount();       //количество датчиков DS18B20 в системе .
+  if (NumberOfDevices > 0) ds18b20_find = true;
   Serial.print("Found ");
-  Serial.print(DS18B20.getDeviceCount(), DEC);
+  Serial.print(NumberOfDevices, DEC);
   Serial.println(" DS18B20 devices.");
   Serial.print("Parasite power is: ");
   if (DS18B20.isParasitePowerMode()) Serial.println("ON"); else Serial.println("OFF");
-
+  
   String buf;
   for (int i = 0; i < NumberOfDevices; i++)
   {
