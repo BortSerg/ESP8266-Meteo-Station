@@ -37,7 +37,7 @@ float getPressureBME280()
     pres = bme.pres();
     delay(100);
     count++;
-  } while ((pres <= 30000.0 || pres >= 110000.0) & count <= 5); //приделы в паскалях
+  } while ((pres <= 30000.0 || pres >= 110000.0) & count <= 5); // приделы в паскалях
   return pres;
 }
 
@@ -59,7 +59,7 @@ float getHumidityBME280()
 //=================Функция вывода на ндикатор температуры в комнате=================
 void getTM1637TemperatureRoom() //
 {
-  int temp = getTemperatureBME280(); //временная локальная переменная
+  int temp = getTemperatureBME280(); // временная локальная переменная
   tm1637.display(0, 30);             //  t
   tm1637.display(1, 35);             //
   tm1637.display(2, 20);             //  i
@@ -74,7 +74,7 @@ void getTM1637TemperatureRoom() //
 //=================Функция вывода на ндикатор температуры на улице=================
 void getTM1637TemperatureOut() //
 {
-  int temp = getTemperature(); //временная локальная переменная
+  int temp = getTemperature(); // временная локальная переменная
   tm1637.display(0, 30);       //  t
   tm1637.display(1, 27);       //  o
   tm1637.display(2, 32);       //  u
@@ -117,7 +117,7 @@ void getTM1637TemperatureOut() //
 //=================Функция вывода на ндикатор атмосферного давления=================
 void getTM1637Pressure() //
 {
-  int temp = getPressureBME280() * 0.0075006157584566; //временная локальная переменная и перевод из паскалей в мм.рт.ст.
+  int temp = getPressureBME280() * 0.0075006157584566; // временная локальная переменная и перевод из паскалей в мм.рт.ст.
 
   tm1637.display(0, 28);                //  P
   tm1637.display(1, (temp / 100) % 10); //  presure
@@ -128,7 +128,7 @@ void getTM1637Pressure() //
 //=================Функция вывода на ндикатор влажности воздуха=====================
 void getTM1637Humidity() //
 {
-  int temp = getHumidityBME280(); //временная локальная переменная
+  int temp = getHumidityBME280(); // временная локальная переменная
 
   if (temp <= 0)
   {

@@ -53,6 +53,12 @@ bool BME280::Initialize()
    if(success)
    {
       success &= ReadTrim();
+
+      if(m_settings.filter != Filter_Off)
+      {
+        InitializeFilter();
+      }
+      
       WriteSettings();
    }
 
@@ -61,6 +67,24 @@ bool BME280::Initialize()
    return m_initialized;
 }
 
+
+/****************************************************************/
+void BME280::InitializeFilter()
+{
+  // Force an unfiltered measurement to populate the filter buffer.
+  // This fixes a bug that causes the first read to always be 28.82 °C 81732.34 hPa.
+  Filter filter = m_settings.filter;
+  m_settings.filter = Filter_Off;
+
+  WriteSettings();
+
+  float dummy;
+  read(dummy, dummy, dummy);
+
+  m_settings.filter = filter;
+}
+
+
 /****************************************************************/
 bool BME280::ReadChipID()
 {
@@ -68,7 +92,8 @@ bool BME280::ReadChipID()
 
    ReadRegister(ID_ADDR, &id[0], 1);
 
-   switch(id[0]) {
+   switch(id[0])
+   {
       case ChipModel_BME280:
          m_chip_model = ChipModel_BME280;
          break;
@@ -80,13 +105,12 @@ bool BME280::ReadChipID()
          return false;
    }
 
-   m_chip_id = id[0];
    return true;
 }
 
 
 /****************************************************************/
-bool BME280::WriteSettings()
+void BME280::WriteSettings()
 {
    uint8_t ctrlHum, ctrlMeas, config;
 
@@ -107,6 +131,7 @@ void BME280::setSettings
    m_settings = settings;
    WriteSettings();
 }
+
 
 /****************************************************************/
 const BME280::Settings& BME280::getSettings() const
@@ -396,14 +421,6 @@ void BME280::read
    humidity = CalculateHumidity(rawHumidity, t_fine);
 }
 
-
-/****************************************************************/
-uint8_t BME280::chipID
-(
-)
-{
-   return m_chip_id;
-}
 
 /****************************************************************/
 BME280::ChipModel BME280::chipModel

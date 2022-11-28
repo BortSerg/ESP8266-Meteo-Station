@@ -55,7 +55,6 @@ void setup()
       delay(1000);
    }
 
-   // bme.chipID(); // Deprecated. See chipModel().
    switch(bme.chipModel())
    {
       case BME280::ChipModel_BME280:
@@ -97,7 +96,7 @@ void printBME280Data
    client->print("% RH");
    client->print("\t\tPressure: ");
    client->print(pres);
-   client->println(" Pa");
+   client->println("Pa");
 
    delay(1000);
 }

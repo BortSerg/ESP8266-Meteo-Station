@@ -70,7 +70,7 @@ BME280I2C::Settings settings(
    BME280::StandbyTime_1000ms,
    BME280::Filter_Off,
    BME280::SpiEnable_False,
-   0x76 // I2C address. I2C specific.
+   BME280I2C::I2CAddr_0x76 // I2C address. I2C specific.
 );
 
 BME280I2C bme(settings);
@@ -89,7 +89,6 @@ void setup()
     delay(1000);
   }
 
-  // bme.chipID(); // Deprecated. See chipModel().
   switch(bme.chipModel())
   {
      case BME280::ChipModel_BME280:
@@ -136,7 +135,7 @@ void printBME280Data
    client->print("% RH");
    client->print("\t\tPressure: ");
    client->print(pres);
-   client->println(" Pa");
+   client->println("Pa");
 
    delay(1000);
 }

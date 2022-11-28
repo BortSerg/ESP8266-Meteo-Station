@@ -1,17 +1,30 @@
 void HTTP_Main()
 {
-
-  float temperature = getTemperature();          // outdoor temp
-  float temperatureBME = getTemperatureBME280(); // room temp
-  float pressureBME = getPressureBME280() * 0.0075006157584566;
-  float humidityBME = getHumidityBME280();
-
   String cssClass = "mediumhot";
+  String str_temperatureBME = "";
+  String str_pressureBME = "";
+  String str_humidityBME = "";
+  String str_temperature = "";
 
-  if (temperatureBME < 0)
-    cssClass = "cold";
-  else if (temperatureBME > 28)
-    cssClass = "hot";
+  if (ds18b20_find)
+  {
+    float temperature = getTemperature(); // outdoor temp
+    str_temperature = String(temperature);
+    if (temperature < 0)
+      cssClass = "cold";
+    else if (temperature > 28)
+      cssClass = "hot";
+  }
+
+  if (bme_find)
+  {
+    float temperatureBME = getTemperatureBME280(); // room temp
+    float pressureBME = getPressureBME280() * 0.0075006157584566;
+    float humidityBME = getHumidityBME280();
+    str_temperatureBME = String(temperatureBME);
+    str_pressureBME = String(pressureBME);
+    str_humidityBME = String(humidityBME);
+  }
 
   String message = "";
   message += "<!DOCTYPE html>";
@@ -51,10 +64,17 @@ void HTTP_Main()
   message += "</div>";
   message += "<div class=\"data\">";
   message += "<table cellspacing=\"100\">";
-  message += "<tr><td><h1>Temperature</h1><h2>" + String(temperatureBME) + "&nbsp;<small>&deg;C</small></h2></td>";
-  message += "<td><h1>Outdore&nbsp;Temperature</h1><h2>" + String(temperature) + "&nbsp;<small>&deg;C</small></h2></td>";
-  message += "<td><h1>Pressure</h1><h2>" + String(pressureBME) + "&nbsp;<small>mmHg</small></h2></td>";
-  message += "<td><h1>Humidity</h1><h2>" + String(humidityBME) + "&nbsp;<small>%</small></h2></td></tr>";
+  if (ds18b20_find)
+  {
+    message += "<tr><h1>Outdore&nbsp;Temperature</h1><h2>" + str_temperature + "&nbsp;<small>&deg;C</small></h2></td>";
+  }
+
+  if (bme_find)
+  {
+    message += "<td><h1>Temperature</h1><h2>" + str_temperatureBME + "&nbsp;<small>&deg;C</small></h2></td>";
+    message += "<td><h1>Pressure</h1><h2>" + str_pressureBME + "&nbsp;<small>mmHg</small></h2></td>";
+    message += "<td><h1>Humidity</h1><h2>" + str_humidityBME + "&nbsp;<small>%</small></h2></td></tr>";
+  }
   message += "</table>";
   message += "</div>";
   message += "</body>";

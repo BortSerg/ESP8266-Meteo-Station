@@ -1,4 +1,11 @@
 # ESP8266-Meteo-Station
+v29_07_2022.
+1. Use or update ESP8266 core to v3.0.2
+2. Update DallasTemperature (DS18B20) v3.9.0
+3. Update BME280 v.3.0.0
+4. Refactoring code loop()
+5. Adaptive display of information on the presence of sensors in the system.
+
 v14_07_2022.
 1. Add auto load default settings in first start meteo station after firmware download.
 2. Set DS18B20 outdoor sensor; BME280 room sensor.
